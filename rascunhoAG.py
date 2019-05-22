@@ -1,5 +1,5 @@
 
-
+import random
 
 def individuo(min,max):
 	return [random.randint(min,max) for i in range(tam_individuo)]
