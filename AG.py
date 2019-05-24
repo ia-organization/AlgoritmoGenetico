@@ -22,7 +22,7 @@ class Individual(object):
     def __init__(self, cromossomo = None):
         self.score = None
         self.cromossomo = cromossomo or self._criaCromossomo()
-
+        self.x = None
         
 
     #Cria um novo cromossomo do tamanho máximo definido anteriormente.
@@ -39,6 +39,7 @@ class Individual(object):
         y =   x**2 - 3*x + 4
         #fitness score
         self.score = y
+        self.x = x
 
     #crossover
     def crossover_1ponto(self,other):
@@ -56,12 +57,11 @@ class Individual(object):
         # return filho1,filho2
         
         def mate(p0,p1):
-            #Creates a new copy of p0.
+            #Cria uma copia de p0 
             chromosome = p0.cromossomo[:]
             
             chromosome[:ponto] = p1.cromossomo[:ponto]
             child = p0.__class__(chromosome)
-            # child.repair(p0,p1)
             return child
         return mate(self,other), mate(other,self)
         
@@ -75,6 +75,7 @@ class Individual(object):
     def copy(self):
         clone = self.__class__(self.cromossomo[:])
         clone.score = self.score
+        clone.x = self.x
         return clone
 
 
@@ -104,7 +105,7 @@ class AlgoritmoGenetico(object):
 
     #Condição de parada
     def _objetivo(self):
-        return (self.geracao > self.max_geracoes)
+        return (self.geracao >= self.max_geracoes)
 
     def auxSort(self):
         for final in range(len(self.populacao), 0, -1):
@@ -127,7 +128,14 @@ class AlgoritmoGenetico(object):
 
         self.geracao+=1
 
+
         self.report()
+
+    def printPopulacao(self):
+        for i in range(self.tam_populacao):
+            print(self.populacao[i].x, end = '\t')
+            
+        
 
     #Crossover proccess
     def _crossover(self):
@@ -178,7 +186,9 @@ class AlgoritmoGenetico(object):
     def report(self):
         print("="*70)
         print("geração: " , self.geracao)
-        print("best:       " , self.best.score)
+        self.printPopulacao()
+        print("\nmelhor x:       " , self.best.x)
+        print("\nmelhor fitness:       " , self.best.score)    
 
     #Roda o algoritmo
     def run(self):
