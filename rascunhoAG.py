@@ -31,7 +31,21 @@ def selecaoEreproducao(populacao):
 		populacao[i][ponto:] = pai[1][ponto:]
 		
 	return populacao
-	
+
+
+# def torneio(populacao, n):
+# 	k = 0.75
+
+# 	for i in range(n):
+# 		ponto1 = random.randint(1, len(populacao))
+# 		ponto2 = random.randint(1, len(populacao))
+# 		r = random.randint(0,1)
+
+# 		if r<k:
+
+
+# 	return
+
 	
 def mutacao(populacao):
 	for i in range(len(populacao) - pais):
@@ -45,3 +59,12 @@ def mutacao(populacao):
 			populacao[i][ponto] = novo_valor
 			
 	return populacao
+
+# class 
+
+# class Population:
+
+# 	lst_individuals = []
+
+# 	def __init__(self):
+# 		pass
