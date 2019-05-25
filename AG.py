@@ -6,45 +6,68 @@ TAM_POPULACAO = int(input("Tamanho da população: "))
 NR_GERACOES = int(input("Número de gerações: "))
 TX_CROSSOVER = 0.6
 PROB_MUTACAO = 0.01
+#possíveis valores dos genes
+bin_values = (0,1)
+#x∈[−10,+10]
+limites = (-10.0,10.0)
+
+#Tamanho do cromossomo
+tam_cromossomo = 10
 
 class Individual(object):
 
     
 
-    #Tamanho do cromossomo
-    tam_cromossomo = 10
-    #possíveis valores dos genes
-    bin_values = (0,1)
 
-    #x∈[−10,+10]
-    limites = (-10.0,10.0)
+    
 
-    def __init__(self, cromossomo = None):
+
+
+    def __init__(self, cromossomo = None, x= None):
         self.score = None
+        self.x = x or self._criaNumAleatorio()
         self.cromossomo = cromossomo or self._criaCromossomo()
-        self.x = None
-        
+
+
+
+    def _criaNumAleatorio(self):
+        numero = random.uniform(limites[0],limites[1])
+        return numero
 
     #Cria um novo cromossomo do tamanho máximo definido anteriormente.
     def _criaCromossomo(self):
-        return [random.choice(self.bin_values) for gene in range(self.tam_cromossomo)]
+
+        parteInteira = int(self.x)
+        parteDecimal = int(str(self.x-parteInteira)[3:])
+
+        strbinParteInteira = bin(parteInteira)[2:]
+        strbinParteDecimal = bin(parteDecimal)[2:]
+        strbinParteInteira = strbinParteInteira.zfill(5)
+        strbinParteDecimal = strbinParteDecimal.zfill(5)
+        strbin = strbinParteInteira+strbinParteDecimal
+        listabin = []
+
+        for numero in strbin:
+            listabin.append(numero)
+        return listabin
+        #return [random.choice(bin_values) for gene in range(self.tam_cromossomo)]
 
 
     #fitness
     def fitness(self):
         #Decodificação do cromossomo
-        coff = float(int(STR_DELIMITER.join(map(str,self.cromossomo)),2)) / float(pow(2,self.tam_cromossomo) - 1)
-        x = self.limites[0] + (self.limites[1] - self.limites[0]) * coff
+        #coff = float(int(STR_DELIMITER.join(map(str,self.cromossomo)),2)) / float(pow(2,self.tam_cromossomo) - 1)
+        #x = limites[0] + (limites[1] - limites[0]) * coff
         #Função objetivo
+        x = self.x
         y =   x**2 - 3*x + 4
         #fitness score
         self.score = y
-        self.x = x
-
+        
     #crossover
     def crossover_1ponto(self,other):
         #60% de cross
-        ponto = random.randint(1, self.tam_cromossomo - 1)
+        ponto = random.randint(1, tam_cromossomo - 1)
         
         # filho1 = self.cromossomo[:]
         # filho2 = other.cromossomo[:]
@@ -157,10 +180,11 @@ class AlgoritmoGenetico(object):
 
     #Seleção dos individuos
     def _select(self):
+        #return self.roleta()
         return self.torneio()
 
-    #Torneio/seleção
-    def torneio(self):
+    #roleta/seleção
+    def roleta(self):
         competitors = []
         total_score = sum([math.ceil(self.populacao[i].score) for i in range(self.tam_populacao)])
         for index in range(self.tam_populacao):
@@ -169,9 +193,31 @@ class AlgoritmoGenetico(object):
         
         return self.populacao[random.choice(competitors)]
 
+    #torneio/seleção
+    def torneio(self):
+        k=0.75
+        for index in range(self.tam_populacao):
+            individuo1 = self.populacao[random.randint(0,self.tam_populacao-1)]
+            individuo2 = self.populacao[random.randint(0,self.tam_populacao-1)]
+            
+            if individuo1.score < individuo2.score:
+                melhor = individuo1
+                pior = individuo2
+            else:
+                pior = individuo1
+                melhor = individuo2
+
+            r = random.choice(bin_values)    
+            if r < k :
+                return melhor
+            else:
+                return pior
+
+                
+
     #Executa a mutação na população
     def _mutate(self,individual):
-        for gene in range(individual.tam_cromossomo):
+        for gene in range(tam_cromossomo):
             if random.random() < self.tx_mutacao:
                 individual.mutacao(gene)
 
