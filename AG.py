@@ -38,10 +38,15 @@ class Individual(object):
     def _criaCromossomo(self):
 
         parteInteira = int(self.x)
-        parteDecimal = int(str(self.x-parteInteira)[3:])
 
-        strbinParteInteira = bin(parteInteira)[2:]
-        strbinParteDecimal = bin(parteDecimal)[2:]
+        strParteDecimal = str(self.x-parteInteira)
+        strParteDecimal = strParteDecimal.replace("0.", "")
+
+        parteDecimal = int(strParteDecimal)
+
+        #tratativa para números negativos
+        strbinParteInteira = bin(parteInteira if parteInteira>0 else parteInteira+(1<32))[2:]
+        strbinParteDecimal = bin(parteDecimal if parteDecimal>0 else parteDecimal+(1<32))[2:]
         strbinParteInteira = strbinParteInteira.zfill(5)
         strbinParteDecimal = strbinParteDecimal.zfill(5)
         strbin = strbinParteInteira+strbinParteDecimal
