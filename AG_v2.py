@@ -200,12 +200,12 @@ class AlgoritmoGenetico(object):
             else:
                 self.result[i] = [self.populacao[i].x]
 
-        # if i+1 not in list(self.result.keys()) and i+2 not in list(self.result.keys()):
-        #     self.result[i+1] = [self.best.x]
-        #     self.result[i+2] = [self.best.score]
-        # else:
-        #     self.result[i+1].append(self.best.x)
-        #     self.result[i+2].append(self.best.score)
+        if i+1 not in list(self.result.keys()) and i+2 not in list(self.result.keys()):
+            self.result[i+1] = [self.best.x]
+            self.result[i+2] = [self.best.score]
+        else:
+            self.result[i+1].append(self.best.x)
+            self.result[i+2].append(self.best.score)
 
 
 
@@ -218,7 +218,13 @@ def printPorLinha(dic):
     aux= ''
     lst = []
     for key in dic:
-        aux += str(key)
+
+        if key == len(dic) - 2:
+            aux += "Melhor x"
+        elif key == len(dic) - 1:
+            aux += "Melhor fitness"
+        else:
+            aux += str(key)
         for valor in dic[key]:
             aux += "\t" + str(valor)
         lst.append(aux)
