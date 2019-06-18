@@ -9,7 +9,7 @@ alfa = 0.5
 
 class Individual(object):
     
-    def __init__(self, cromossomo = None, x= None):
+    def __init__(self, cromossomo = None):
         self.score = None
         #self.x = x or self._criaNumAleatorio()
         self.cromossomo = cromossomo or self._criaCromossomo()
@@ -39,7 +39,7 @@ class Individual(object):
         p2 = other.cromossomo        
         c1 = p1 + beta*(p2-p1)
         c2 = p2 + beta*(p1-p2)
-        return c1,c2
+        return Individual(c1), Individual(c2)
 
     
     
@@ -135,7 +135,6 @@ class AlgoritmoGenetico(object):
             
             
             for individual in offspring:
-                print(individual)
                 self._mutate(individual)
                 individual.fitness()
                 next_population.append(individual)
@@ -191,6 +190,7 @@ class AlgoritmoGenetico(object):
             individual.cromossomo = individual.cromossomo + (limites[1] - individual.cromossomo)*fG
         elif(r1>=0.5):
             individual.cromossomo = individual.cromossomo - (individual.cromossomo - limites[0])*fG
+        
 
     #Pega o melhor individuo de toda a população
     def best():
