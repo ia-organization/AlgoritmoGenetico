@@ -12,7 +12,7 @@ class Individual(object):
     def __init__(self, cromossomo = None):
         self.score = None
         #self.x = x or self._criaNumAleatorio()
-        self.cromossomo = cromossomo or self._criaCromossomo()
+        self.x = self.cromossomo = cromossomo or self._criaCromossomo()
 
     def _criaNumAleatorio(self):
         numero = random.uniform(limites[0],limites[1])
@@ -178,12 +178,12 @@ class AlgoritmoGenetico(object):
     def _mutate(self,individual):
         if random.random() < self.tx_mutacao:
             #individual.mutacao(gene)
-            mutacao_nao_uniforme(individual)
+            self.mutacao_nao_uniforme(individual)
 
     #Mutacao não uniforme
     def mutacao_nao_uniforme(self,individual):
-        r1 = random.random(0,1)
-        r2 = random.random(0,1)
+        r1 = random.uniform(0,1)
+        r2 = random.uniform(0,1)
         fG = (r2*(1-(self.geracao/self.max_geracoes)))**limites[1]
         c = 0.0
         if(r1<0.5):
